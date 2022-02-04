@@ -53,8 +53,8 @@ def readJson(path: str) -> dict:
 def createSurvey(name: str, start_date: datetime, end_date: datetime, description: str = "") -> None:
     data = {
         'name': name,
-        'start_date': start_date.strftime("%m/%d/%Y, %H:%M:%S"),
-        'end_date': end_date.strftime("%m/%d/%Y, %H:%M:%S"),
+        'start_date': start_date.strftime("%m/%d/%Y %H:%M:%S"),
+        'end_date': end_date.strftime("%m/%d/%Y %H:%M:%S"),
         'description': description,
         'questions': [],
         'responses': [],
@@ -88,7 +88,7 @@ def editSurvey(id_: int, new_name: str = None, new_description: str = None, new_
     if new_description:
         data['description'] = new_description
     if new_end_date:
-        data['end_date'] = new_end_date.strftime("%m/%d/%Y, %H:%M:%S"),
+        data['end_date'] = new_end_date.strftime("%m/%d/%Y %H:%M:%S"),
 
     writeDictToJson(data, join(SURV_FOLDER, str(id_) + '.json'))
 
