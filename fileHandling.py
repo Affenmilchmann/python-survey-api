@@ -71,7 +71,10 @@ def deleteSurvey(id_: int) -> bool:
             return True
     return False
 
-def editSurvey(id_: int, new_name: str = None, new_description: str = None, new_end_date: datetime = None) -> bool:
+def editSurvey(id_: int, 
+                new_name: str = None, 
+                new_description: str = None, 
+                new_end_date: datetime = None) -> bool:
     """Edits survey by 'id'. Returns False if survey with id = 'id' does not exists or if both 'new_name', 'new_description' and 'new_end_date' were None or if error occured while reading file"""
     if not new_name and not new_description and not new_end_date:
         return False
@@ -88,7 +91,7 @@ def editSurvey(id_: int, new_name: str = None, new_description: str = None, new_
     if new_description:
         data['description'] = new_description
     if new_end_date:
-        data['end_date'] = new_end_date.strftime("%m/%d/%Y %H:%M:%S"),
+        data['end_date'] = new_end_date.strftime("%m/%d/%Y %H:%M:%S")
 
     writeDictToJson(data, join(SURV_FOLDER, str(id_) + '.json'))
 
@@ -100,7 +103,7 @@ class QuestionState(Enum):
     single_choice = 1
     multiple_choice = 2
 
-def addQuestion(id_: int, text: str, q_type: QuestionState,
+def addQuestion(id_: int, text: str, q_type: str,
                 single_correct_answer: str = None,
                 multiple_correct_answers: List[str] = None, 
                 other_answers: List[str] = None) -> bool:
@@ -122,21 +125,23 @@ def addQuestion(id_: int, text: str, q_type: QuestionState,
 
     question_data = {
         'text': text, 
-        'type': q_type.name,
+        'type': q_type,
     }
 
-    if q_type == QuestionState.single_choice and single_correct_answer and other_answers:
+    if q_type == QuestionState.single_choice.name and single_correct_answer and other_answers:
         question_data['single_correct_answer'] = single_correct_answer
         question_data['other_answers'] = other_answers
-    elif q_type == QuestionState.multiple_choice and multiple_correct_answers and other_answers:
+    elif q_type == QuestionState.multiple_choice.name and multiple_correct_answers and other_answers:
         question_data['multiple_correct_answers'] = multiple_correct_answers
         question_data['other_answers'] = other_answers
-    elif q_type != QuestionState.text:
+    elif q_type != QuestionState.text.name:
         return False
         
     data['questions'].append(question_data)
 
     writeDictToJson(data, join(SURV_FOLDER, str(id_) + '.json'))
+
+    return True
 
 def deleteQuestion(survey_id: int, question_id: int) -> bool:
     if not checkIfIdExists(survey_id):
